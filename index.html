@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     :root{--bg:#0f0a06;--surface:#1a1208;--card:#231a0e;--card-hover:#2d2114;--border:rgba(255,255,255,0.08);
@@ -228,6 +229,44 @@
     ::-webkit-scrollbar{width:6px}
     ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:6px}
 
+    .topbar-right{display:flex;align-items:center;gap:10px}
+    .btn-upload{display:flex;align-items:center;gap:8px;background:var(--accent-bg);border:1px solid rgba(212,160,23,0.25);
+    color:var(--accent-l);font-size:13px;font-weight:600;padding:8px 14px;border-radius:var(--r-sm);transition:all 0.15s}
+    .btn-upload:hover{background:rgba(212,160,23,0.2);border-color:var(--accent)}
+    .admin-badge{display:flex;align-items:center;gap:6px;background:var(--green-bg);border:1px solid rgba(22,163,74,0.3);
+    color:var(--green);font-size:12px;font-weight:700;padding:6px 12px;border-radius:var(--r-sm)}
+    .admin-badge.hidden{display:none}
+
+    .menu-drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    border:2px dashed var(--border);border-radius:var(--r);padding:32px 20px;cursor:pointer;text-align:center;transition:border-color 0.2s,background 0.2s}
+    .menu-drop:hover,.menu-drop.over{border-color:var(--accent);background:var(--accent-bg)}
+    .menu-drop b{color:var(--accent-l)}
+    .menu-drop .mh{font-size:15px;font-weight:600;color:var(--text)}
+    .menu-drop .ms{font-size:12px;color:var(--dim)}
+    .ocr-status{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);
+    border-radius:var(--r);padding:12px 14px;font-size:13px;color:var(--dim);margin-top:12px}
+    .ocr-status .spinner{width:16px;height:16px;border:2px solid rgba(212,160,23,0.3);border-top-color:var(--accent-l);
+    border-radius:50%;animation:spin 0.8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .ocr-status.done{color:var(--green)}
+    .ocr-status.done .spinner{display:none}
+
+    .menu-review{max-height:300px;overflow-y:auto;margin-top:14px;display:flex;flex-direction:column;gap:8px}
+    .menu-row{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);
+    border-radius:var(--r-sm);padding:10px 12px}
+    .menu-row .r-name{flex:1;min-width:0}
+    .menu-row .r-price{width:90px;text-align:right;font-family:var(--mono)}
+    .menu-row .r-cat{width:120px}
+    .menu-row input,.menu-row select{background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:6px;
+    color:var(--text);padding:7px 10px;font-size:13px;outline:none;font-family:inherit}
+    .menu-row input:focus,.menu-row select:focus{border-color:var(--accent)}
+    .menu-row .r-x{width:28px;height:28px;border-radius:6px;display:grid;place-items:center;color:var(--dim);flex-shrink:0}
+    .menu-row .r-x:hover{background:var(--red-bg);color:var(--red)}
+    .menu-hint{font-size:11px;color:var(--dim);margin-top:10px;line-height:1.5}
+    .menu-actions{display:flex;gap:8px;margin-top:14px}
+    .menu-actions .btn-cancel{flex:1}
+    .menu-actions .btn-order{flex:1}
+
     .login-screen{position:fixed;inset:0;z-index:900;background:var(--bg);
     display:flex;align-items:center;justify-content:center;padding:20px;
     background-image:radial-gradient(ellipse 120% 80% at 50% -20%,rgba(212,160,23,0.08) 0%,transparent 60%)}
@@ -328,6 +367,38 @@
     </div>
   </div>
 
+  <!-- MENU UPLOAD MODAL -->
+  <div class="modal-bg" id="menuBg">
+    <div class="modal" style="max-width:480px">
+      <div class="modal-head">
+        <h3>Upload Menu Photos</h3>
+        <button class="modal-x" id="menuX">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="menu-drop" id="menuDrop">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--accent-l)"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+          <div class="mh">Drag &amp; drop menu photos here</div>
+          <div class="ms">or <b>click to browse</b> — JPG/PNG. We'll read the items &amp; prices automatically.</div>
+        </div>
+        <input type="file" id="menuFile" accept="image/*" multiple hidden>
+        <div class="ocr-status" id="ocrStatus" style="display:none">
+          <span class="spinner"></span><span id="ocrText">Reading menu...</span>
+        </div>
+        <div class="menu-review" id="menuReview" style="display:none"></div>
+        <div class="menu-hint" id="menuHint"></div>
+      </div>
+      <div class="modal-foot" style="flex-direction:column;gap:10px">
+        <button class="btn-order" id="menuSave" style="width:100%">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>
+          Save This Menu
+        </button>
+        <button class="btn-cancel" id="menuCancel" style="width:100%">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <header class="topbar">
     <div class="brand">
       <div class="logo-icon">
@@ -340,7 +411,17 @@
       <h1>Quick Bite</h1>
       <span class="tag">Fast Food Order Tracker</span>
     </div>
-    <div class="clock" id="clock"></div>
+    <div class="topbar-right">
+      <span class="admin-badge hidden" id="adminBadge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Admin
+      </span>
+      <button class="btn-upload" id="btnUpload">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+        Menu Photos
+      </button>
+      <div class="clock" id="clock"></div>
+    </div>
   </header>
 
   <div class="alarm-banner" id="alarmBanner">
@@ -457,13 +538,13 @@
         </div>
         <div class="contact-row">
           <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
-          <div class="cd"><b>WhatsApp / Contact</b><span>+92 300 0000000</span></div>
-          <span class="cv">+92 300 0000000</span>
+          <div class="cd"><b>WhatsApp / Contact</b><span id="cPhoneLbl"></span></div>
+          <span class="cv" id="cPhoneVal"></span>
         </div>
         <div class="contact-row">
           <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg></span>
-          <div class="cd"><b>Email</b><span>hello@quickbite.example.com</span></div>
-          <span class="cv">hello@</span>
+          <div class="cd"><b>Email</b><span id="cEmailLbl"></span></div>
+          <span class="cv" id="cEmailVal"></span>
         </div>
         <div class="login-hint" style="margin-top:8px;text-align:left">Interested in APK building, a custom tracking app, or the full Quick Bite system? Contact us to discuss your project.</div>
       </div>
@@ -491,13 +572,13 @@
           <div class="pay-title">You've Reached the Demo Limit</div>
           <div class="pay-sub">This free demo allows 20 logins. Upgrade to the full version to continue using Quick Bite.</div>
           <div class="pay-badge">One-time · Lifetime Access</div>
-          <div class="pay-amount">Rs. 25,000</div>
+          <div class="pay-amount" id="payAmount"></div>
           <div class="pay-note">Full version: unlimited orders, APK build, custom branding</div>
-          <div class="pay-row"><span class="pl">JazzCash</span><span class="pv">0300 0000000</span></div>
-          <div class="pay-row"><span class="pl">EasyPaisa</span><span class="pv">0300 0000000</span></div>
-          <div class="pay-row"><span class="pl">Bank Account</span><span class="pv">PK00 XXXX 0000 0000 0000 0000</span></div>
-          <div class="pay-row"><span class="pl">Account Title</span><span class="pv">Quick Bite Demo</span></div>
-          <div class="pay-footer">After payment, send the transaction screenshot to WhatsApp <b>+92 300 0000000</b> to receive your unlock code.</div>
+          <div class="pay-row"><span class="pl">JazzCash</span><span class="pv" id="payJazz"></span></div>
+          <div class="pay-row"><span class="pl">EasyPaisa</span><span class="pv" id="payEasy"></span></div>
+          <div class="pay-row"><span class="pl">Bank Account</span><span class="pv" id="payBank"></span></div>
+          <div class="pay-row"><span class="pl">Account Title</span><span class="pv" id="payTitle"></span></div>
+          <div class="pay-footer">After payment, send the transaction screenshot to WhatsApp <b id="payWhats"></b> to receive your unlock code.</div>
         </div>
       </div>
       <div class="modal-foot">
@@ -532,6 +613,20 @@
 
   <script>
     const $=s=>document.querySelector(s);
+    const SEC={
+      phone:'PVpRQjNOR1preEdaa1pRWg==',
+      email:'PT1Eb2lBellmeUpMZ3FURDBOd291dTJuY2tKTHg1Skx6QUtM',
+      easypaisa:'PVpRQjNOR1preEdaa1pRWg==',
+      jazzcash:'PVpRQjNOR1preEdaa1pRWg==',
+      accountTitle:'aTFKTVJPRk0weXpEdGYyTGNJS0g=',
+      amount:'PT1OWmpOUVkxVlFWaFphSA==',
+      waNum:'bXRtQWpSR1o1UkdabVZHQg=='
+    };
+    function _r13(s){return s.replace(/[a-zA-Z]/g,c=>{const b=c<='Z'?65:97;return String.fromCharCode((c.charCodeAt(0)-b+13)%26+b)})}
+    function _d(s){const a=atob(s),rev=_r13(a).split('').reverse().join('');return atob(rev)}
+    function _val(k){try{return _d(SEC[k])}catch{return ''}}
+    const PHONE=_val('phone'),EMAIL=_val('email'),EASYPAISA=_val('easypaisa'),JAZZCASH=_val('jazzcash'),ACCT_TITLE=_val('accountTitle'),AMOUNT=_val('amount'),WA_NUM=_val('waNum');
+    const ADMIN_NAME='asfand';
     const I={
       burger:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 11h18v2a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4v-2z"/><path d="M3 11V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v4"/><path d="M3 11h18"/></svg>',
       shawarma:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8 2 5 5 5 9c0 2 1 4 2 5l-1 6h12l-1-6c1-1 2-3 2-5 0-4-3-7-7-7z"/></svg>',
@@ -559,7 +654,7 @@
     };
     function ic(n,s=20){return `<span style="width:${s}px;height:${s}px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">${I[n]||I.burger}</span>`}
 
-    const MENU=[
+    const DEFAULT_MENU=[
       {id:'zinger-burger',name:'Zinger Burger',price:550,time:8,cat:'Burgers',icon:'burger',desc:'Crispy zinger patty',badge:'popular'},
       {id:'chicken-burger',name:'Chicken Burger',price:420,time:7,cat:'Burgers',icon:'burger',desc:'Grilled chicken patty'},
       {id:'beef-burger',name:'Beef Burger',price:480,time:7,cat:'Burgers',icon:'burger',desc:'Juicy beef patty'},
@@ -591,8 +686,10 @@
       {id:'deal-snack-box',name:'Snack Box',price:1200,time:10,cat:'Deals',icon:'deal',desc:'Nuggets (12) + Wings (6) + 2 Fries + 2 Drinks',badge:'popular',
         items:[{id:'nuggets-12',qty:1},{id:'chicken-wings-6',qty:1},{id:'french-fries',qty:2},{id:'soft-drink',qty:2}]}
     ];
-    const CATS=['Burgers','Shawarma & Rolls','Pizza','Snacks','Sandwiches','Drinks','Deals'];
-    const MI={};MENU.forEach(m=>MI[m.id]=m);
+    let MENU=DEFAULT_MENU;const CATS=['Burgers','Shawarma & Rolls','Pizza','Snacks','Sandwiches','Drinks','Deals'];
+    const MI={};function rebuildMI(){Object.keys(MI).forEach(k=>delete MI[k]);MENU.forEach(m=>MI[m.id]=m)}
+    function loadCustomMenu(){const saved=Store.get('qb_menu',null);if(saved&&Array.isArray(saved)&&saved.length){MENU=saved;rebuildMI()}else{rebuildMI()}}
+    function saveCustomMenu(items){MENU=items;rebuildMI();Store.set('qb_menu',items);buildDropdown();toast('Menu updated with '+items.length+' items')}
 
     const Store={k:{o:'qb_o',h:'qb_h',c:'qb_c'},get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}},set(k,v){localStorage.setItem(k,JSON.stringify(v))},orders(){return this.get(this.k.o,[])},saveOrders(v){this.set(this.k.o,v)},hist(){return this.get(this.k.h,[])},saveHist(v){this.set(this.k.h,v)},nextId(){const c=this.get(this.k.c,1);this.set(this.k.c,c+1);return c}};
 
@@ -604,10 +701,18 @@
     let orders=Store.orders(),hist=Store.hist(),cart=[],notes='',customerName='',ddOpen=false,cartInst=0,pendingCancel=null,pendingStage=null,dragId=null;
     let loginCount=parseInt(Store.get('qb_logins',0));const LOGIN_CONTACT_AT=15,LOGIN_PAYWALL_AT=20;
 
-    function init(){buildDropdown();renderCart();renderBoard();renderStats();setupEvents();Timer.start();Timer.on(tick);setInterval(renderStats,5000);updateClock();setInterval(updateClock,1000);updateLoginUI()}
+    function init(){loadCustomMenu();buildDropdown();renderCart();renderBoard();renderStats();setupEvents();Timer.start();Timer.on(tick);setInterval(renderStats,5000);updateClock();setInterval(updateClock,1000);updateLoginUI();fillSecrets()}
+    function fillSecrets(){
+      const fmt=p=>'+92 '+p.slice(1,4)+' '+p.slice(4,7)+' '+p.slice(7);
+      $('#cPhoneLbl').textContent=fmt(PHONE);$('#cPhoneVal').textContent=PHONE;
+      $('#cEmailLbl').textContent=EMAIL;$('#cEmailVal').textContent=EMAIL;
+      $('#payAmount').textContent=AMOUNT;$('#payJazz').textContent=JAZZCASH;$('#payEasy').textContent=EASYPAISA;
+      $('#payBank').textContent='Easypaisa '+EASYPAISA;$('#payTitle').textContent=ACCT_TITLE;$('#payWhats').textContent=PHONE;
+    }
 
     function updateLoginUI(){const n=loginCount+1;$('#loginCount').textContent='Demo · Login '+n+'/'+LOGIN_PAYWALL_AT;const hint=$('#loginHint');if(loginCount>=LOGIN_PAYWALL_AT){hint.innerHTML='<strong style="color:var(--red)">Demo limit reached</strong>' }else if(loginCount>=LOGIN_CONTACT_AT-1){hint.innerHTML='This demo shows <strong>'+LOGIN_CONTACT_AT+'</strong> free logins. Build your own app with <strong>APK &amp; tracking system</strong>.' }else{const left=LOGIN_CONTACT_AT-n;$('#loginCount').textContent='Demo · Login '+(n)+'/'+LOGIN_CONTACT_AT;hint.innerHTML='<strong>'+left+'</strong> free logins left before the contact screen.' }}
-    function doLogin(){const name=$('#loginName').value.trim();if(!name){toast('Enter your name to sign in',true);return}loginCount++;Store.set('qb_logins',loginCount);Store.set('qb_user',name);$('#loginScreen').classList.add('hidden');startSession();if(loginCount>=LOGIN_PAYWALL_AT){setTimeout(showPaywall,400)}else if(loginCount>=LOGIN_CONTACT_AT){setTimeout(showContact,400)}}
+    function doLogin(){const name=$('#loginName').value.trim();if(!name){toast('Enter your name to sign in',true);return}const isAdmin=name.toLowerCase()===ADMIN_NAME;if(isAdmin){showAdminBadge();toast('Welcome, Admin '+name)}else{loginCount++;Store.set('qb_logins',loginCount)}Store.set('qb_user',name);$('#loginScreen').classList.add('hidden');startSession();if(!isAdmin){if(loginCount>=LOGIN_PAYWALL_AT){setTimeout(showPaywall,400)}else if(loginCount>=LOGIN_CONTACT_AT){setTimeout(showContact,400)}}else{loadCustomMenu()}}
+    function showAdminBadge(){$('#adminBadge').classList.remove('hidden')}
     function startSession(){document.body.classList.add('logged-in')}
     function showContact(){$('#contactBg').classList.add('open')}
     function hideContact(){$('#contactBg').classList.remove('open')}
@@ -637,13 +742,82 @@
       $('#contactX').onclick=hideContact;
       $('#contactSkip').onclick=hideContact;
       $('#contactOk').onclick=hideContact;
-      $('#paywallContact').onclick=()=>{toast('Opening WhatsApp...');window.open('https://wa.me/923000000000','_blank')};
+      $('#paywallContact').onclick=()=>{toast('Opening WhatsApp...');window.open('https://wa.me/'+WA_NUM,'_blank')};
       $('#contactBg').onclick=e=>{if(e.target===e.currentTarget)hideContact()};
       $('#paywallBg').onclick=e=>{if(e.target===e.currentTarget&&!$('#paywallBg').classList.contains('unskippable'))hidePaywall()};
       document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#paywallBg').classList.contains('unskippable')&&$('#paywallBg').classList.contains('open')){e.preventDefault();return}});
+      $('#btnUpload').onclick=openMenuModal;
+      $('#menuX').onclick=closeMenuModal;
+      $('#menuCancel').onclick=closeMenuModal;
+      $('#menuBg').onclick=e=>{if(e.target===e.currentTarget)closeMenuModal()};
+      $('#menuDrop').onclick=()=>$('#menuFile').click();
+      $('#menuDrop').addEventListener('dragover',e=>{e.preventDefault();$('#menuDrop').classList.add('over')});
+      $('#menuDrop').addEventListener('dragleave',()=>$('#menuDrop').classList.remove('over'));
+      $('#menuDrop').addEventListener('drop',e=>{e.preventDefault();$('#menuDrop').classList.remove('over');const files=Array.from(e.dataTransfer.files||[]).filter(f=>f.type.startsWith('image/'));if(files.length)processMenuPhotos(files)});
+      $('#menuFile').onchange=e=>{const files=Array.from(e.target.files||[]);if(files.length)processMenuPhotos(files);e.target.value=''};
+      $('#menuSave').onclick=saveMenuFromReview;
     }
 
     function updateClock(){$('#clock').innerHTML=ic('clock',16)+' '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+
+    let _ocrItems=[];
+    function openMenuModal(){_ocrItems=[];$('#menuReview').style.display='none';$('#menuHint').textContent='The extracted items will appear here for review before saving.';$('#menuBg').classList.add('open')}
+    function closeMenuModal(){_ocrItems=[];$('#ocrStatus').style.display='none';$('#menuReview').style.display='none';$('#menuBg').classList.remove('open')}
+
+    function setOcrStatus(show,txt,done){const st=$('#ocrStatus');st.style.display=show?'flex':'none';st.classList.toggle('done',!!done);$('#ocrText').textContent=txt||''}
+
+    async function processMenuPhotos(files){
+      setOcrStatus(true,'Reading menu photos...');$('#menuHint').textContent='';$('#menuReview').style.display='none';
+      let text='';
+      try{
+        const worker=await Tesseract.createWorker('eng',1,{logger:m=>{if(m.status==='recognizing text')setOcrStatus(true,'Reading text... '+Math.round(m.progress*100)+'%')}});
+        for(const f of files){setOcrStatus(true,'Reading '+f.name+'...');const{data}=await worker.recognize(f);text+=data.text+'\n'}
+        await worker.terminate();
+      }catch(err){setOcrStatus(true,'OCR error: '+err.message,true);toast('Could not read the image',true);return}
+      const items=parseMenuText(text);
+      if(!items.length){setOcrStatus(true,'No menu items detected. Try a clearer photo.',true);$('#menuHint').textContent='Make sure prices are visible. You can still edit the list manually.';return}
+      _ocrItems=items;renderMenuReview(items);setOcrStatus(true,'Extracted '+items.length+' items. Review & edit below.',true)
+    }
+
+    function parseMenuText(text){
+      const lines=text.split('\n').map(l=>l.trim()).filter(Boolean);const items=[],seen=new Set();
+      const catRe=[{cat:'Burgers',kw:/burger|zinger|whopper|mighty/i},{cat:'Shawarma & Rolls',kw:/shawarma|roll/i},{cat:'Pizza',kw:/pizza/i},{cat:'Snacks',kw:/fries|nuggets|wings|samosa|snack|strips/i},{cat:'Sandwiches',kw:/sandwich|sub/i},{cat:'Drinks',kw:/pepsi|coke|cola|sprite|fanta|7up|7 up|dew|drink|juice|shake|water|margarita/i},{cat:'Deals',kw:/deal|combo|meal|feast|box/i}];
+      for(const line of lines){
+        if(line.length>80||/^\s*menu|^\s*prices?|^\s*rs\.?\s*$|^\d+\.?\s*$/i.test(line))continue;
+        const priceM=line.match(/(?:rs\.?|pkr|pkrs?\.?)?\s*([\d,]+)\s*(?:rs\.?|pkr)?\.?\s*$/i)||line.match(/\b(?:rs\.?|pkr|pkrs?\.?)\s*([\d,]+)\b/i);
+        if(!priceM)continue;
+        const price=parseInt(priceM[1].replace(/,/g,''),10);if(!price||price<50)continue;
+        let name=line.replace(priceM[0],'').replace(/^[\s\-–—:.#0-9)]+/, '').trim();
+        name=name.replace(/\s+/g,' ').trim();
+        if(name.length<2)continue;if(seen.has(name.toLowerCase()))continue;
+        let cat='Snacks';for(const c of catRe){if(c.kw.test(name)){cat=c.cat;break}}
+        const iconMap={'Burgers':'burger','Shawarma & Rolls':'roll','Pizza':'pizza','Snacks':'fries','Sandwiches':'sandwich','Drinks':'drink','Deals':'deal'};
+        seen.add(name.toLowerCase());items.push({id:'m'+items.length,name,price,time:Math.min(25,4+Math.round(price/150)),cat,icon:iconMap[cat],desc:''});
+      }
+      return items;
+    }
+
+    function renderMenuReview(items){
+      const box=$('#menuReview');box.style.display='flex';
+      box.innerHTML=items.map((it,i)=>`<div class="menu-row" data-i="${i}"><input class="r-name" value="${escAttr(it.name)}"><input class="r-price" value="${it.price}" type="number" min="1"><select class="r-cat">${CATS.map(c=>`<option ${c===it.cat?'selected':''}>${c}</option>`).join('')}</select><button class="r-x" title="Remove">×</button></div>`).join('');
+      box.querySelectorAll('.menu-row').forEach(row=>{
+        const i=+row.dataset.i;
+        row.querySelector('.r-name').oninput=e=>{items[i].name=e.target.value};
+        row.querySelector('.r-price').oninput=e=>{items[i].price=parseInt(e.target.value)||0};
+        row.querySelector('.r-cat').onchange=e=>{items[i].cat=e.target.value;items[i].icon=({'Burgers':'burger','Shawarma & Rolls':'roll','Pizza':'pizza','Snacks':'fries','Sandwiches':'sandwich','Drinks':'drink','Deals':'deal'})[e.target.value]||'burger'};
+        row.querySelector('.r-x').onclick=()=>{items.splice(i,1);renderMenuReview(items);if(!items.length)setOcrStatus(true,'All items removed.',true)}
+      });
+    }
+    function escAttr(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+    function saveMenuFromReview(){
+      const box=$('#menuReview'),rows=box.querySelectorAll('.menu-row');let items=[];
+      if(rows.length){
+        rows.forEach(row=>{const name=row.querySelector('.r-name').value.trim(),price=parseInt(row.querySelector('.r-price').value)||0;if(name&&price>0)items.push({id:'c'+items.length,name,price,time:Math.min(25,4+Math.round(price/150)),cat:row.querySelector('.r-cat').value,icon:({'Burgers':'burger','Shawarma & Rolls':'roll','Pizza':'pizza','Snacks':'fries','Sandwiches':'sandwich','Drinks':'drink','Deals':'deal'})[row.querySelector('.r-cat').value]||'burger',desc:''})});
+      }else{items=_ocrItems.filter(it=>it.name&&it.price>0)}
+      if(!items.length){toast('Add at least one item',true);return}
+      saveCustomMenu(items);closeMenuModal();setOcrStatus(false,'');
+    }
 
     function buildDropdown(){const dd=$('#selectDD');let h='';CATS.forEach(cat=>{const items=MENU.filter(m=>m.cat===cat);if(!items.length)return;const catClass=cat.toLowerCase().replace(/[^a-z]/g,'');h+=`<div class="optgroup"><div class="optgroup-label cat-${catClass}">${ic(items[0].icon,14)} ${cat}</div>`;items.forEach(m=>{const badge=m.badge?`<span class="select-item-badge badge-${m.badge}">${m.badge}</span>`:'';h+=`<div class="select-item" data-id="${m.id}"><span class="select-item-icon">${ic(m.icon,22)}</span><div class="select-item-info"><div class="select-item-name">${m.name} ${badge}</div><div class="select-item-desc">${m.desc}</div></div><span class="select-item-price">Rs ${m.price.toLocaleString()}</span></div>`});h+='</div>'});dd.innerHTML=h;dd.querySelectorAll('.select-item').forEach(el=>{el.onclick=e=>{e.stopPropagation();addToCart(el.dataset.id)}})}
 
