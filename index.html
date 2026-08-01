@@ -82,6 +82,9 @@
     .select-item-info{flex:1}
     .select-item-name{font-size:14px;font-weight:500}
     .select-item-desc{font-size:12px;color:var(--dim);margin-top:1px}
+    .select-item-top{display:inline-flex;align-items:center;gap:3px;font-size:9.5px;font-family:var(--mono);
+    color:var(--accent-l);background:var(--accent-bg);border:1px solid rgba(212,160,23,0.25);
+    padding:1px 6px;border-radius:99px;vertical-align:middle;margin-left:2px}
     .select-item-price{font-family:var(--mono);font-weight:600;color:var(--accent-l);font-size:14px}
     .select-item-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:0.5px}
     .badge-deal{background:var(--accent-bg);color:var(--accent-l)}
@@ -148,7 +151,9 @@
     background:var(--accent);color:#1a1208;display:grid;place-items:center}
     .card-items{list-style:none;margin:8px 0;display:flex;flex-direction:column;gap:4px}
     .card-customer{font-size:12px;color:var(--accent-l);margin-bottom:6px;display:flex;align-items:center;gap:6px;font-weight:500}
-    .card-items li{display:flex;justify-content:space-between;font-size:13px}
+    .card-items li{display:flex;justify-content:space-between;font-size:13px;gap:8px}
+    .card-items li>span:first-child{flex:1;min-width:0}
+    .card-items li>span:last-child{flex-shrink:0}
     .card-items li span:last-child{color:var(--dim);font-family:var(--mono)}
     .card-notes{font-size:12px;color:#fdba74;background:var(--orange-bg);padding:6px 10px;border-radius:6px;margin:8px 0}
     .card-timer{display:flex;justify-content:space-between;background:rgba(0,0,0,0.3);
@@ -225,6 +230,37 @@
     .btn-go-back{flex:1;padding:12px;font-size:14px;font-weight:600;border-radius:10px;
     background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text)}
     .btn-go-back:hover{background:rgba(255,255,255,0.1)}
+
+    .tops-item{display:flex;align-items:center;gap:12px;background:var(--card);
+    border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:14px}
+    .tops-item-icon{width:40px;height:40px;border-radius:10px;background:var(--accent-bg);
+    display:grid;place-items:center;color:var(--accent-l);flex-shrink:0}
+    .tops-item-name{font-size:15px;font-weight:700;color:var(--text)}
+    .tops-item-sub{font-size:12px;color:var(--dim)}
+    .tops-title{font-size:13px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px}
+    .tops-hint{font-size:11px;text-transform:none;letter-spacing:0;font-weight:400;color:var(--dim)}
+    .tops-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+    .tops-row{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);
+    border-radius:var(--r);padding:12px 14px;cursor:pointer;transition:border-color 0.15s,background 0.15s;user-select:none}
+    .tops-row:hover{border-color:var(--accent)}
+    .tops-row.sel{border-color:var(--accent);background:var(--accent-bg)}
+    .tops-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--border);
+    display:grid;place-items:center;color:transparent;flex-shrink:0;transition:all 0.15s}
+    .tops-row.sel .tops-check{background:var(--accent);border-color:var(--accent);color:#1a1208}
+    .tops-row .tc-ic{color:var(--accent-l);flex-shrink:0}
+    .tops-name{flex:1;font-size:14px;color:var(--text)}
+    .tops-price{font-family:var(--mono);font-weight:600;color:var(--accent-l);font-size:14px}
+    .tops-total-row{display:flex;justify-content:space-between;align-items:baseline;padding-top:12px;
+    border-top:1px solid var(--border);font-size:14px;color:var(--dim)}
+    .tops-total-val{font-family:var(--mono);font-weight:700;font-size:22px;color:var(--accent-l)}
+
+    .cart-top{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
+    .cart-top-chip{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-family:var(--mono);
+    color:var(--accent-l);background:var(--accent-bg);border:1px solid rgba(212,160,23,0.25);
+    padding:1px 6px;border-radius:99px}
+    .order-top{font-size:11px;color:var(--accent-l);display:block;margin-top:1px}
+    .order-top-chip{display:inline-flex;align-items:center;gap:3px;background:var(--accent-bg);
+    border:1px solid rgba(212,160,23,0.2);border-radius:99px;padding:0 5px;margin-right:3px;font-size:10.5px;font-family:var(--mono)}
 
     ::-webkit-scrollbar{width:6px}
     ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:6px}
@@ -522,6 +558,40 @@
 
   <div class="toast" id="toast"></div>
 
+  <!-- TOPPINGS MODAL (shown when adding an item that supports toppings) -->
+  <div class="modal-bg" id="topsBg">
+    <div class="modal" style="max-width:400px">
+      <div class="modal-head">
+        <h3>Customize <span id="topsItemName">Item</span></h3>
+        <button class="modal-x" id="topsX">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="tops-item">
+          <span class="tops-item-icon" id="topsItemIcon"></span>
+          <div>
+            <div class="tops-item-name" id="topsBase"></div>
+            <div class="tops-item-sub">Base price</div>
+          </div>
+        </div>
+        <div class="tops-title">Add toppings <span class="tops-hint">optional</span></div>
+        <div class="tops-list" id="topsList"></div>
+        <div class="tops-total-row">
+          <span>Total</span>
+          <span class="tops-total-val" id="topsTotal">Rs 0</span>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-cancel" id="topsCancel">Cancel</button>
+        <button class="btn-order" id="topsAdd">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+          Add to Order
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- CONTACT MODAL (shown after 15 logins, skippable) -->
   <div class="modal-bg" id="contactBg">
     <div class="modal" style="max-width:400px">
@@ -650,9 +720,28 @@
       alert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
       note:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>',
       deal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>',
+      cheese:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18v2a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4v-2z"/><path d="M3 11V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v4"/><path d="M3 11h18"/><path d="M7 15h10" stroke-dasharray="2 2"/></svg>',
+      chicken:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-1a6 6 0 0 1 6-6z"/><path d="M6 10l-2 2m0 0l2 2m-2-2h8"/><path d="M12 2a2 2 0 0 1 2 2v3h-4V4a2 2 0 0 1 2-2z"/></svg>',
+      sauce:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M12 6c2 2 3 3 3 5 0 2-1 3-1 5v6H9v-6c0-2-1-3-1-5 0-2 1-3 3-5z"/></svg>',
       grip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1.5" fill="currentColor"/><circle cx="15" cy="5" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="19" r="1.5" fill="currentColor"/><circle cx="15" cy="19" r="1.5" fill="currentColor"/></svg>'
     };
     function ic(n,s=20){return `<span style="width:${s}px;height:${s}px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">${I[n]||I.burger}</span>`}
+
+    const TOPPINGS={
+      cheese:{name:'Cheese',price:50,icon:'cheese'},
+      chicken:{name:'Extra Chicken',price:100,icon:'chicken'},
+      sauce:{name:'Extra Sauce',price:30,icon:'sauce'}
+    };
+    const CAT_TOPS={
+      'Burgers':['cheese','chicken','sauce'],
+      'Shawarma & Rolls':['cheese','sauce'],
+      'Pizza':['cheese','chicken'],
+      'Snacks':['cheese'],
+      'Sandwiches':['cheese','chicken','sauce'],
+      'Drinks':[],
+      'Deals':[]
+    };
+    function itemTops(m){const ids=m.tops?m.tops:(CAT_TOPS[m.cat]||[]);return ids.map(id=>TOPPINGS[id]).filter(Boolean)}
 
     const DEFAULT_MENU=[
       {id:'shami-burger',name:'Shami Burger',price:150,time:5,cat:'Burgers',icon:'burger',desc:'Classic shami patty',badge:'popular'},
@@ -737,7 +826,7 @@
     document.addEventListener('click',()=>{const c=Alarm.getCtx();if(c&&c.state==='suspended')c.resume()},{once:false});
 
     const AUTO_DONE_SECS=10;
-    let orders=Store.orders(),hist=Store.hist(),cart=[],notes='',customerName='',ddOpen=false,cartInst=0,pendingCancel=null,pendingStage=null,dragId=null;
+    let orders=Store.orders(),hist=Store.hist(),cart=[],notes='',customerName='',ddOpen=false,cartInst=0,pendingCancel=null,pendingStage=null,dragId=null,topItem=null,topSel=new Set();
     let loginCount=parseInt(Store.get('qb_logins',0));const LOGIN_CONTACT_AT=15,LOGIN_PAYWALL_AT=20;
 
     function init(){loadCustomMenu();buildDropdown();renderCart();renderBoard();renderStats();setupEvents();Timer.start();Timer.on(tick);setInterval(renderStats,5000);updateClock();setInterval(updateClock,1000);updateLoginUI();fillSecrets()}
@@ -795,6 +884,10 @@
       $('#menuDrop').addEventListener('drop',e=>{e.preventDefault();$('#menuDrop').classList.remove('over');const files=Array.from(e.dataTransfer.files||[]).filter(f=>f.type.startsWith('image/'));if(files.length)processMenuPhotos(files)});
       $('#menuFile').onchange=e=>{const files=Array.from(e.target.files||[]);if(files.length)processMenuPhotos(files);e.target.value=''};
       $('#menuSave').onclick=saveMenuFromReview;
+      $('#topsX').onclick=closeTopsModal;
+      $('#topsCancel').onclick=closeTopsModal;
+      $('#topsBg').onclick=e=>{if(e.target===e.currentTarget)closeTopsModal()};
+      $('#topsAdd').onclick=confirmTops;
     }
 
     function updateClock(){$('#clock').innerHTML=ic('clock',16)+' '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
@@ -881,24 +974,47 @@
       saveCustomMenu(items);closeMenuModal();setOcrStatus(false,'');
     }
 
-    function buildDropdown(){const dd=$('#selectDD');let h='';CATS.forEach(cat=>{const items=MENU.filter(m=>m.cat===cat);if(!items.length)return;const catClass=cat.toLowerCase().replace(/[^a-z]/g,'');h+=`<div class="optgroup"><div class="optgroup-label cat-${catClass}">${ic(items[0].icon,14)} ${cat}</div>`;items.forEach(m=>{const badge=m.badge?`<span class="select-item-badge badge-${m.badge}">${m.badge}</span>`:'';h+=`<div class="select-item" data-id="${m.id}"><span class="select-item-icon">${ic(m.icon,22)}</span><div class="select-item-info"><div class="select-item-name">${m.name} ${badge}</div><div class="select-item-desc">${m.desc}</div></div><span class="select-item-price">Rs ${m.price.toLocaleString()}</span></div>`});h+='</div>'});dd.innerHTML=h;dd.querySelectorAll('.select-item').forEach(el=>{el.onclick=e=>{e.stopPropagation();addToCart(el.dataset.id)}})}
+    function buildDropdown(){const dd=$('#selectDD');let h='';CATS.forEach(cat=>{const items=MENU.filter(m=>m.cat===cat);if(!items.length)return;const catClass=cat.toLowerCase().replace(/[^a-z]/g,'');h+=`<div class="optgroup"><div class="optgroup-label cat-${catClass}">${ic(items[0].icon,14)} ${cat}</div>`;items.forEach(m=>{const badge=m.badge?`<span class="select-item-badge badge-${m.badge}">${m.badge}</span>`:'';const topTag=!m.items&&itemTops(m).length?`<span class="select-item-top" title="Customizable">${ic('plus',10)} Toppings</span>`:'';h+=`<div class="select-item" data-id="${m.id}"><span class="select-item-icon">${ic(m.icon,22)}</span><div class="select-item-info"><div class="select-item-name">${m.name} ${badge} ${topTag}</div><div class="select-item-desc">${m.desc}</div></div><span class="select-item-price">Rs ${m.price.toLocaleString()}</span></div>`});h+='</div>'});dd.innerHTML=h;dd.querySelectorAll('.select-item').forEach(el=>{el.onclick=e=>{e.stopPropagation();addToCart(el.dataset.id)}})}
 
     function cartItems(){return cart.filter(x=>x.q>0)}
-    function cartTotal(){return cartItems().reduce((s,x)=>s+x.m.price*x.q,0)}
+    function lineUnit(x){return x.m.price+(x.tops||[]).reduce((s,t)=>s+t.price,0)}
+    function cartTotal(){return cartItems().reduce((s,x)=>s+lineUnit(x)*x.q,0)}
     function cartPrep(){const items=cartItems();return items.length?Math.max(...items.map(x=>x.m.time))*60:0}
 
-    function addToCart(id){const item=MI[id];if(!item)return;if(item.items){item.items.forEach(sub=>{const existing=cart.find(c=>c.m.id===sub.id);if(existing){existing.q+=sub.qty}else{cartInst++;cart.push({inst:cartInst,m:MI[sub.id],q:sub.qty})}})}else{const existing=cart.find(c=>c.m.id===id);if(existing){existing.q++}else{cartInst++;cart.push({inst:cartInst,m:item,q:1})}}renderCart();toast('Added '+item.name)}
+    function addToCart(id){
+      const item=MI[id];if(!item)return;
+      if(item.items){item.items.forEach(sub=>{const existing=cart.find(c=>c.m.id===sub.id);if(existing){existing.q+=sub.qty}else{cartInst++;cart.push({inst:cartInst,m:MI[sub.id],q:sub.qty,tops:[]})}});renderCart();toast('Added '+item.name);return}
+      const tops=itemTops(item);
+      if(tops.length){openTopsModal(item)}else{addLine(item,[])}
+    }
+    function topsKey(tops){return (tops||[]).map(t=>t.name).sort().join('|')}
+    function addLine(item,tops){
+      const key=topsKey(tops);
+      const existing=cart.find(c=>c.m.id===item.id&&topsKey(c.tops)===key);
+      if(existing){existing.q++}else{cartInst++;cart.push({inst:cartInst,m:item,q:1,tops:tops.map(t=>({name:t.name,price:t.price,icon:t.icon}))})}
+      renderCart();toast('Added '+item.name)
+    }
+    function openTopsModal(item){
+      topItem=item;topSel.clear();const tops=itemTops(item);
+      $('#topsItemIcon').innerHTML=ic(item.icon,20);$('#topsBase').textContent=item.name+' — Rs '+item.price.toLocaleString();
+      $('#topsList').innerHTML=tops.map((t,i)=>`<div class="tops-row" data-i="${i}"><span class="tops-check">${ic('check',12)}</span><span class="tc-ic">${ic(t.icon,18)}</span><span class="tops-name">${t.name}</span><span class="tops-price">+Rs ${t.price.toLocaleString()}</span></div>`).join('');
+      $('#topsList').querySelectorAll('.tops-row').forEach(row=>{row.onclick=()=>{const i=+row.dataset.i;if(topSel.has(i)){topSel.delete(i);row.classList.remove('sel')}else{topSel.add(i);row.classList.add('sel')}renderTopsTotal()}});
+      renderTopsTotal();$('#topsBg').classList.add('open')
+    }
+    function renderTopsTotal(){if(!topItem)return;const tops=itemTops(topItem);const extra=[...topSel].reduce((s,i)=>s+(tops[i]?tops[i].price:0),0);$('#topsTotal').textContent='Rs '+((topItem.price+extra).toLocaleString())}
+    function closeTopsModal(){topItem=null;topSel.clear();$('#topsBg').classList.remove('open')}
+    function confirmTops(){if(!topItem)return;const tops=itemTops(topItem).filter((_,i)=>topSel.has(i));addLine(topItem,tops);closeTopsModal()}
 
     function changeQty(inst,d){const idx=cart.findIndex(c=>c.inst===inst);if(idx===-1)return;cart[idx].q+=d;if(cart[idx].q<=0)cart.splice(idx,1);renderCart()}
     function removeFromCart(inst){cart=cart.filter(c=>c.inst!==inst);renderCart()}
 
-    function renderCart(){const box=$('#cart'),items=cartItems();if(!items.length){box.innerHTML='<div class="cart-empty">'+ic('plus',16)+' Select items from the dropdown above</div>'}else{box.innerHTML=items.map((x,i)=>`<div class="cart-row"><span class="cart-icon">${ic(x.m.icon,24)}</span><div class="cart-info"><div class="cart-name">${x.m.name} <span style="color:var(--dim);font-size:11px;font-family:var(--mono)">#${i+1}</span></div><div class="cart-unit">Rs ${x.m.price.toLocaleString()} each</div></div><div class="cart-qty"><button class="qty-btn" onclick="Q(${x.inst},-1)">${ic('minus',14)}</button><span class="qty-num">${x.q}</span><button class="qty-btn" onclick="Q(${x.inst},1)">${ic('plus',14)}</button></div><span class="cart-line">Rs ${(x.m.price*x.q).toLocaleString()}</span><button class="qty-btn rm" onclick="RM(${x.inst})" title="Remove">&times;</button></div>`).join('')}$('#cartTotal').textContent='Rs '+cartTotal().toLocaleString();const p=cartPrep();$('#cartTime').textContent=p?new Date(Date.now()+p*1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'--:--';$('#btnPlace').disabled=!items.length}
+    function renderCart(){const box=$('#cart'),items=cartItems();if(!items.length){box.innerHTML='<div class="cart-empty">'+ic('plus',16)+' Select items from the dropdown above</div>'}else{box.innerHTML=items.map((x,i)=>`<div class="cart-row"><span class="cart-icon">${ic(x.m.icon,24)}</span><div class="cart-info"><div class="cart-name">${x.m.name} <span style="color:var(--dim);font-size:11px;font-family:var(--mono)">#${i+1}</span></div>${x.tops&&x.tops.length?`<div class="cart-top">${x.tops.map(t=>`<span class="cart-top-chip">${ic(t.icon,10)} ${t.name} +Rs ${t.price}</span>`).join('')}</div>`:''}<div class="cart-unit">Rs ${x.m.price.toLocaleString()} each</div></div><div class="cart-qty"><button class="qty-btn" onclick="Q(${x.inst},-1)">${ic('minus',14)}</button><span class="qty-num">${x.q}</span><button class="qty-btn" onclick="Q(${x.inst},1)">${ic('plus',14)}</button></div><span class="cart-line">Rs ${(lineUnit(x)*x.q).toLocaleString()}</span><button class="qty-btn rm" onclick="RM(${x.inst})" title="Remove">&times;</button></div>`).join('')}$('#cartTotal').textContent='Rs '+cartTotal().toLocaleString();const p=cartPrep();$('#cartTime').textContent=p?new Date(Date.now()+p*1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'--:--';$('#btnPlace').disabled=!items.length}
     window.Q=(inst,d)=>{changeQty(inst,d)};window.RM=inst=>{removeFromCart(inst)};
 
-    function showModal(){const items=cartItems();if(!items.length)return toast('Add items first!',true);if(!customerName.trim())return toast('Enter customer name!',true);$('#cfmItems').innerHTML=items.map(x=>`<div class="cfm-item"><span class="cfm-item-icon">${ic(x.m.icon,20)}</span><span class="cfm-item-name">${x.q}x ${x.m.name}</span><span class="cfm-item-price">Rs ${(x.m.price*x.q).toLocaleString()}</span></div>`).join('');$('#cfmTotal').textContent='Rs '+cartTotal().toLocaleString();const p=cartPrep();$('#cfmTime').textContent=p?new Date(Date.now()+p*1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'--:--';$('#cfmCustomer').textContent=customerName.trim();$('#modalBg').classList.add('open')}
+    function showModal(){const items=cartItems();if(!items.length)return toast('Add items first!',true);if(!customerName.trim())return toast('Enter customer name!',true);$('#cfmItems').innerHTML=items.map(x=>`<div class="cfm-item"><span class="cfm-item-icon">${ic(x.m.icon,20)}</span><span class="cfm-item-name">${x.q}x ${x.m.name}${x.tops&&x.tops.length?`<span class="order-top">${x.tops.map(t=>`<span class="order-top-chip">${ic(t.icon,10)} ${t.name} +Rs ${t.price}</span>`).join('')}</span>`:''}</span><span class="cfm-item-price">Rs ${(lineUnit(x)*x.q).toLocaleString()}</span></div>`).join('');$('#cfmTotal').textContent='Rs '+cartTotal().toLocaleString();const p=cartPrep();$('#cfmTime').textContent=p?new Date(Date.now()+p*1000).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'--:--';$('#cfmCustomer').textContent=customerName.trim();$('#modalBg').classList.add('open')}
     function hideModal(){$('#modalBg').classList.remove('open')}
 
-    function showCancelModal(o){pendingCancel=o;const cust=o.customer||'Walk-in';$('#cancelOrderNum').textContent='Order #'+o.id+' — '+cust;$('#cancelOrderItems').innerHTML=o.items.map(it=>`<li><span>${it.qty}x ${it.name}</span><span>Rs ${(it.price*it.qty).toLocaleString()}</span></li>`).join('');$('#cancelBg').classList.add('open')}
+    function showCancelModal(o){pendingCancel=o;const cust=o.customer||'Walk-in';$('#cancelOrderNum').textContent='Order #'+o.id+' — '+cust;$('#cancelOrderItems').innerHTML=o.items.map(it=>`<li><span>${it.qty}x ${it.name}${it.tops&&it.tops.length?`<span class="order-top">${it.tops.map(t=>`<span class="order-top-chip">${ic(t.icon||'cheese',10)} ${t.name} +Rs ${t.price}</span>`).join('')}</span>`:''}</span><span>Rs ${(orderLineTotal(it)).toLocaleString()}</span></li>`).join('');$('#cancelBg').classList.add('open')}
     function hideCancelModal(){pendingCancel=null;$('#cancelBg').classList.remove('open')}
     function confirmCancelOrder(){if(!pendingCancel)return;const o=pendingCancel;pendingCancel=null;$('#cancelBg').classList.remove('open');Alarm.stop(o.id);orders=orders.filter(x=>x.id!==o.id);Store.saveOrders(orders);renderBoard();renderStats();toast('Order #'+o.id+' cancelled')}
 
@@ -906,8 +1022,9 @@
     function hideStageModal(){pendingStage=null;$('#stageBg').classList.remove('open')}
     function confirmStageAdvance(){if(!pendingStage)return;const{order:o,target}=pendingStage;pendingStage=null;$('#stageBg').classList.remove('open');if(target==='complete'){complete(o);toast('Order #'+o.id+' delivered!')}else{moveOrder(o,target);toast('Order #'+o.id+' moved to '+({wip:'In Progress',done:'Ready'})[target])}}
 
-    function placeOrder(){const items=cartItems();if(!items.length)return;hideModal();const cust=customerName.trim()||'Walk-in';const o={id:Store.nextId(),customer:cust,items:items.map(x=>({id:x.m.id,name:x.m.name,price:x.m.price,time:x.m.time,qty:x.q})),notes:notes.trim(),status:'wip',createdAt:Date.now(),startedAt:Date.now(),completedAt:null,alarmDismissed:false,ringing:false,prepNotified:false};orders.unshift(o);Store.saveOrders(orders);cart=[];notes='';customerName='';$('#orderNotes').value='';$('#customerName').value='';renderCart();renderBoard();renderStats();toast('Order #'+o.id+' ('+cust+') — Rs '+orderTotal(o).toLocaleString())}
-    function orderTotal(o){return o.items.reduce((s,it)=>s+it.price*it.qty,0)}
+    function placeOrder(){const items=cartItems();if(!items.length)return;hideModal();const cust=customerName.trim()||'Walk-in';const o={id:Store.nextId(),customer:cust,items:items.map(x=>({id:x.m.id,name:x.m.name,price:x.m.price,time:x.m.time,qty:x.q,tops:(x.tops||[]).map(t=>({name:t.name,price:t.price,icon:t.icon}))})),notes:notes.trim(),status:'wip',createdAt:Date.now(),startedAt:Date.now(),completedAt:null,alarmDismissed:false,ringing:false,prepNotified:false};orders.unshift(o);Store.saveOrders(orders);cart=[];notes='';customerName='';$('#orderNotes').value='';$('#customerName').value='';renderCart();renderBoard();renderStats();toast('Order #'+o.id+' ('+cust+') — Rs '+orderTotal(o).toLocaleString())}
+    function orderLineTotal(it){return (it.price+(it.tops||[]).reduce((s,t)=>s+t.price,0))*it.qty}
+    function orderTotal(o){return o.items.reduce((s,it)=>s+orderLineTotal(it),0)}
     function orderPrep(o){return Math.max(...o.items.map(it=>it.time))*60}
     function advance(o){if(o.status==='wip')showStageModal(o,'done');else if(o.status==='done')showStageModal(o,'complete')}
     function complete(o){o.status='completed';o.completedAt=Date.now();Alarm.stop(o.id);hist.push(o);orders=orders.filter(x=>x.id!==o.id);Store.saveOrders(orders);Store.saveHist(hist);renderBoard();renderStats();toast('Order #'+o.id+' delivered! '+ic('check',16))}
@@ -916,7 +1033,7 @@
 
     function moveOrder(o,newStatus){if(o.status===newStatus)return;if(newStatus==='wip'&&!o.startedAt)o.startedAt=Date.now();o.status=newStatus;Store.saveOrders(orders);renderBoard();renderStats()}
     function renderBoard(){const now=Date.now(),cols={wip:$('#colWip'),done:$('#colDone')};Object.values(cols).forEach(c=>c.innerHTML='');if(!orders.length){Object.values(cols).forEach(c=>c.innerHTML='<div class="col-empty">No orders</div>')}[...orders].sort((a,b)=>a.createdAt-b.createdAt).forEach(o=>cols[o.status]&&cols[o.status].appendChild(buildCard(o,now)));const statusMap={colWip:'wip',colDone:'done'};Object.entries(statusMap).forEach(([colId,st])=>{const col=$('#'+colId);col.ondragover=e=>{e.preventDefault();e.dataTransfer.dropEffect='move';col.classList.add('dragover')};col.ondragleave=()=>col.classList.remove('dragover');col.ondrop=e=>{e.preventDefault();col.classList.remove('dragover');if(!dragId)return;const o=orders.find(x=>x.id===dragId);if(o)moveOrder(o,st)}});updateAlarmBanner()}
-    function buildCard(o,now){const prep=orderPrep(o),elapsed=Math.floor((now-o.createdAt)/1000),remaining=prep-elapsed,overdue=elapsed>prep+30,prepReady=elapsed>=prep&&!overdue;const el=document.createElement('div');el.className='order-card s-'+o.status+(overdue?' overdue':'')+(o.ringing&&overdue?' flash':'')+(prepReady?' prep-ready':'');el.dataset.id=o.id;el.draggable=true;const labels={wip:'In Progress',done:'Ready'};const cust=o.customer||'Walk-in';el.innerHTML=`<span class="drag-handle" title="Drag to move">${ic('grip',16)}</span><div class="card-head"><span class="order-num">#${o.id}</span><span class="badge ${o.status}">${labels[o.status]}</span>${o.status==='done'?'<span class="card-check">'+ic('check',14)+'</span>':''}</div><div class="card-customer">${ic('note',13)} ${cust}</div><ul class="card-items">${o.items.map(it=>`<li><span>${it.qty}x ${it.name}</span><span>Rs ${(it.price*it.qty).toLocaleString()}</span></li>`).join('')}</ul>${o.notes?'<div class="card-notes">'+ic('note',14)+' '+o.notes+'</div>':''}<div class="card-timer"><span class="elapsed">${ic('timer',14)} ${o.status==='done'?ic('check',14)+' Ready':Timer.fmt(elapsed)}</span><span class="remaining ${o.status==='done'?'ready':remaining<0?'late':''}">${o.status==='done'?'Waiting for pickup':remaining<0?ic('alarm',14)+' +'+Timer.fmt(-remaining):ic('clock',14)+' '+Timer.fmt(remaining)}</span></div><div class="card-foot"><span class="card-total">Rs ${orderTotal(o).toLocaleString()}</span><div class="card-actions">${overdue&&!o.alarmDismissed?'<button class="card-btn silence" title="Dismiss">'+ic('mute',14)+'</button>':''}<button class="card-btn del" title="Cancel">&times;</button></div></div>`;el.onclick=e=>{if(!e.target.closest('.card-btn')&&!e.target.closest('.drag-handle'))advance(o)};el.querySelector('.del').onclick=e=>{e.stopPropagation();deleteOrder(o)};const sil=el.querySelector('.silence');if(sil)sil.onclick=e=>{e.stopPropagation();dismissAlarm(o)};el.addEventListener('dragstart',e=>{dragId=o.id;el.classList.add('dragging');e.dataTransfer.effectAllowed='move'});el.addEventListener('dragend',()=>{dragId=null;el.classList.remove('dragging');document.querySelectorAll('.col-body').forEach(c=>c.classList.remove('dragover'))});return el}
+    function buildCard(o,now){const prep=orderPrep(o),elapsed=Math.floor((now-o.createdAt)/1000),remaining=prep-elapsed,overdue=elapsed>prep+30,prepReady=elapsed>=prep&&!overdue;const el=document.createElement('div');el.className='order-card s-'+o.status+(overdue?' overdue':'')+(o.ringing&&overdue?' flash':'')+(prepReady?' prep-ready':'');el.dataset.id=o.id;el.draggable=true;const labels={wip:'In Progress',done:'Ready'};const cust=o.customer||'Walk-in';el.innerHTML=`<span class="drag-handle" title="Drag to move">${ic('grip',16)}</span><div class="card-head"><span class="order-num">#${o.id}</span><span class="badge ${o.status}">${labels[o.status]}</span>${o.status==='done'?'<span class="card-check">'+ic('check',14)+'</span>':''}</div><div class="card-customer">${ic('note',13)} ${cust}</div><ul class="card-items">${o.items.map(it=>`<li><span>${it.qty}x ${it.name}${it.tops&&it.tops.length?`<span class="order-top">${it.tops.map(t=>`<span class="order-top-chip">${ic(t.icon||'cheese',10)} ${t.name} +Rs ${t.price}</span>`).join('')}</span>`:''}</span><span>Rs ${orderLineTotal(it).toLocaleString()}</span></li>`).join('')}</ul>${o.notes?'<div class="card-notes">'+ic('note',14)+' '+o.notes+'</div>':''}<div class="card-timer"><span class="elapsed">${ic('timer',14)} ${o.status==='done'?ic('check',14)+' Ready':Timer.fmt(elapsed)}</span><span class="remaining ${o.status==='done'?'ready':remaining<0?'late':''}">${o.status==='done'?'Waiting for pickup':remaining<0?ic('alarm',14)+' +'+Timer.fmt(-remaining):ic('clock',14)+' '+Timer.fmt(remaining)}</span></div><div class="card-foot"><span class="card-total">Rs ${orderTotal(o).toLocaleString()}</span><div class="card-actions">${overdue&&!o.alarmDismissed?'<button class="card-btn silence" title="Dismiss">'+ic('mute',14)+'</button>':''}<button class="card-btn del" title="Cancel">&times;</button></div></div>`;el.onclick=e=>{if(!e.target.closest('.card-btn')&&!e.target.closest('.drag-handle'))advance(o)};el.querySelector('.del').onclick=e=>{e.stopPropagation();deleteOrder(o)};const sil=el.querySelector('.silence');if(sil)sil.onclick=e=>{e.stopPropagation();dismissAlarm(o)};el.addEventListener('dragstart',e=>{dragId=o.id;el.classList.add('dragging');e.dataTransfer.effectAllowed='move'});el.addEventListener('dragend',()=>{dragId=null;el.classList.remove('dragging');document.querySelectorAll('.col-body').forEach(c=>c.classList.remove('dragover'))});return el}
 
     function tick(){const now=Date.now();let changed=false;orders.forEach(o=>{const elapsed=(now-o.createdAt)/1000,prep=orderPrep(o),overdue=elapsed>prep+30;if(o.status==='wip'&&elapsed>=prep&&!o.prepNotified){o.prepNotified=true;changed=true;if(!Alarm.active.has(o.id)){Alarm.ring(o.id);o.ringing=true}toast(ic('alarm',16)+' Order #'+o.id+' ready for pickup!',true)}if(o.status==='done'&&elapsed>=prep+AUTO_DONE_SECS){complete(o);changed=true;return}if(o.status==='wip'&&!o.prepNotified){if(Alarm.active.has(o.id)){Alarm.stop(o.id);o.ringing=false}}if(overdue&&!o.alarmDismissed&&!Alarm.active.has(o.id)){o.ringing=true;changed=true;Alarm.ring(o.id);toast(ic('alert',16)+' Order #'+o.id+' overdue!',true)}else if(!overdue&&o.ringing&&o.prepNotified){o.ringing=false;Alarm.stop(o.id);changed=true}});if(changed)Store.saveOrders(orders);renderBoard();updateAlarmBanner()}
 
