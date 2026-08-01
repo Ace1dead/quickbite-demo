@@ -655,36 +655,75 @@
     function ic(n,s=20){return `<span style="width:${s}px;height:${s}px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">${I[n]||I.burger}</span>`}
 
     const DEFAULT_MENU=[
-      {id:'zinger-burger',name:'Zinger Burger',price:550,time:8,cat:'Burgers',icon:'burger',desc:'Crispy zinger patty',badge:'popular'},
-      {id:'chicken-burger',name:'Chicken Burger',price:420,time:7,cat:'Burgers',icon:'burger',desc:'Grilled chicken patty'},
-      {id:'beef-burger',name:'Beef Burger',price:480,time:7,cat:'Burgers',icon:'burger',desc:'Juicy beef patty'},
-      {id:'double-zinger',name:'Double Zinger Burger',price:720,time:10,cat:'Burgers',icon:'burger',desc:'Double crispy zinger',badge:'popular'},
-      {id:'chicken-cheese-burger',name:'Chicken Cheese Burger',price:600,time:8,cat:'Burgers',icon:'burger',desc:'With melted cheese'},
-      {id:'chicken-shawarma',name:'Chicken Shawarma',price:280,time:6,cat:'Shawarma & Rolls',icon:'shawarma',desc:'Classic chicken shawarma'},
-      {id:'chicken-cheese-shawarma',name:'Chicken Cheese Shawarma',price:330,time:7,cat:'Shawarma & Rolls',icon:'shawarma',desc:'With extra cheese'},
-      {id:'zinger-roll',name:'Zinger Roll',price:400,time:6,cat:'Shawarma & Rolls',icon:'roll',desc:'Crispy zinger in paratha'},
-      {id:'chicken-mayo-roll',name:'Chicken Mayo Roll',price:350,time:6,cat:'Shawarma & Rolls',icon:'roll',desc:'With mayo sauce'},
-      {id:'small-pizza',name:'Small Pizza',price:900,time:12,cat:'Pizza',icon:'pizza',desc:'6 inch, 4 slices'},
-      {id:'medium-pizza',name:'Medium Pizza',price:1500,time:15,cat:'Pizza',icon:'pizza',desc:'9 inch, 6 slices',badge:'popular'},
-      {id:'large-pizza',name:'Large Pizza',price:2100,time:18,cat:'Pizza',icon:'pizza',desc:'12 inch, 8 slices'},
-      {id:'french-fries',name:'French Fries',price:250,time:4,cat:'Snacks',icon:'fries',desc:'Classic crispy fries'},
-      {id:'masala-fries',name:'Masala Fries',price:300,time:5,cat:'Snacks',icon:'fries',desc:'Spiced masala fries',badge:'popular'},
-      {id:'nuggets-6',name:'Chicken Nuggets (6 pcs)',price:450,time:6,cat:'Snacks',icon:'nuggets',desc:'6 crispy nuggets'},
-      {id:'nuggets-12',name:'Chicken Nuggets (12 pcs)',price:800,time:8,cat:'Snacks',icon:'nuggets',desc:'12 crispy nuggets'},
-      {id:'chicken-wings-6',name:'Chicken Wings (6 pcs)',price:500,time:8,cat:'Snacks',icon:'wings',desc:'6 spicy wings'},
-      {id:'club-sandwich',name:'Club Sandwich',price:450,time:7,cat:'Sandwiches',icon:'sandwich',desc:'Triple layer club'},
-      {id:'chicken-grill-sandwich',name:'Chicken Grill Sandwich',price:500,time:7,cat:'Sandwiches',icon:'sandwich',desc:'Grilled chicken breast'},
-      {id:'soft-drink',name:'Soft Drink',price:120,time:1,cat:'Drinks',icon:'drink',desc:'Coke, Sprite, Fanta'},
-      {id:'mineral-water',name:'Mineral Water',price:100,time:1,cat:'Drinks',icon:'water',desc:'500ml bottle'},
-      {id:'mint-margarita',name:'Mint Margarita',price:250,time:3,cat:'Drinks',icon:'mint',desc:'Fresh mint blend',badge:'new'},
-      {id:'deal-zinger-meal',name:'Zinger Meal Deal',price:850,time:10,cat:'Deals',icon:'deal',desc:'Zinger Burger + Fries + Drink',badge:'deal',
-        items:[{id:'zinger-burger',qty:1},{id:'french-fries',qty:1},{id:'soft-drink',qty:1}]},
-      {id:'deal-family-feast',name:'Family Feast',price:3500,time:15,cat:'Deals',icon:'deal',desc:'2 Burgers + Pizza + Wings + 4 Drinks',badge:'deal',
-        items:[{id:'chicken-burger',qty:2},{id:'medium-pizza',qty:1},{id:'chicken-wings-6',qty:1},{id:'soft-drink',qty:4}]},
-      {id:'deal-shawarma-combo',name:'Shawarma Combo',price:650,time:8,cat:'Deals',icon:'deal',desc:'Shawarma + Fries + Mint Margarita',
-        items:[{id:'chicken-shawarma',qty:1},{id:'french-fries',qty:1},{id:'mint-margarita',qty:1}]},
-      {id:'deal-snack-box',name:'Snack Box',price:1200,time:10,cat:'Deals',icon:'deal',desc:'Nuggets (12) + Wings (6) + 2 Fries + 2 Drinks',badge:'popular',
-        items:[{id:'nuggets-12',qty:1},{id:'chicken-wings-6',qty:1},{id:'french-fries',qty:2},{id:'soft-drink',qty:2}]}
+      {id:'shami-burger',name:'Shami Burger',price:150,time:5,cat:'Burgers',icon:'burger',desc:'Classic shami patty',badge:'popular'},
+      {id:'anda-burger',name:'Double Anda Burger',price:200,time:6,cat:'Burgers',icon:'burger',desc:'With fried egg'},
+      {id:'raza-burger',name:'Special Raza Burger',price:250,time:6,cat:'Burgers',icon:'burger',desc:'Signature raza patty'},
+      {id:'boti-burger',name:'Chicken Botti Burger',price:300,time:7,cat:'Burgers',icon:'burger',desc:'Smoky boti kebab'},
+      {id:'chapli-burger',name:'Chapli Patty Burger',price:250,time:6,cat:'Burgers',icon:'burger',desc:'Spiced chapli patty'},
+      {id:'patty-egg-burger',name:'Patty Egg Burger',price:300,time:6,cat:'Burgers',icon:'burger',desc:'Patty with fried egg'},
+      {id:'thai-burger',name:'Thai Burger',price:350,time:7,cat:'Burgers',icon:'burger',desc:'With Cheese 400'},
+      {id:'takkar-burger',name:'Double Takkar Burger',price:450,time:8,cat:'Burgers',icon:'burger',desc:'With Cheese 500'},
+      {id:'tower-burger',name:'Tower Burger',price:480,time:8,cat:'Burgers',icon:'burger',desc:'With Cheese 500',badge:'new'},
+      {id:'chicken-shawarma',name:'Chicken Shawarma',price:170,time:5,cat:'Shawarma & Rolls',icon:'shawarma',desc:'Classic chicken shawarma',badge:'popular'},
+      {id:'special-shawarma',name:'Chicken Special Shawarma',price:200,time:5,cat:'Shawarma & Rolls',icon:'shawarma',desc:'Loaded special'},
+      {id:'zinger-tikka-shawarma',name:'Zinger Tikka Shawarma',price:200,time:6,cat:'Shawarma & Rolls',icon:'shawarma',desc:'Crispy zinger tikka'},
+      {id:'zinger-shawarma-plate',name:'Zinger Shawarma Plate',price:250,time:6,cat:'Shawarma & Rolls',icon:'shawarma',desc:'With Cheese 300'},
+      {id:'tikka-shawarma',name:'Tikka Shawarma',price:250,time:6,cat:'Shawarma & Rolls',icon:'shawarma',desc:'With Cheese 300'},
+      {id:'cheese-shawarma',name:'Cheese Shawarma',price:250,time:6,cat:'Shawarma & Rolls',icon:'shawarma',desc:'Melted cheese filling'},
+      {id:'tikka-platter',name:'Tikka Platter (2 Breads)',price:500,time:10,cat:'Shawarma & Rolls',icon:'shawarma',desc:'With Cheese 850'},
+      {id:'zinger-platter',name:'Zinger Platter (2 Breads)',price:500,time:10,cat:'Shawarma & Rolls',icon:'shawarma',desc:'With Cheese 550'},
+      {id:'chicken-platter',name:'Chicken Platter (2 Breads)',price:400,time:9,cat:'Shawarma & Rolls',icon:'shawarma',desc:'With Cheese 450'},
+      {id:'chicken-paratha-roll',name:'Chicken Paratha Roll',price:260,time:6,cat:'Shawarma & Rolls',icon:'roll',desc:'Paratha wrap'},
+      {id:'chicken-cheese-roll',name:'Chicken Cheese Paratha Roll',price:300,time:7,cat:'Shawarma & Rolls',icon:'roll',desc:'With cheese'},
+      {id:'zinger-paratha-roll',name:'Zinger Paratha Roll',price:300,time:7,cat:'Shawarma & Rolls',icon:'roll',desc:'Crispy zinger in paratha'},
+      {id:'zinger-cheese-roll',name:'Zinger Cheese Paratha Roll',price:350,time:7,cat:'Shawarma & Rolls',icon:'roll',desc:'With cheese'},
+      {id:'tikka-paratha-roll',name:'Tikka Paratha Roll',price:300,time:7,cat:'Shawarma & Rolls',icon:'roll',desc:'Tikka filling'},
+      {id:'tikka-cheese-roll',name:'Tikka Cheese Paratha Roll',price:350,time:7,cat:'Shawarma & Rolls',icon:'roll',desc:'With cheese'},
+      {id:'pizza-paratha',name:'Pizza Paratha',price:350,time:8,cat:'Shawarma & Rolls',icon:'roll',desc:'Pizza-style paratha'},
+      {id:'afghani-pizza',name:'Afghani Pizza',price:350,time:12,cat:'Pizza',icon:'pizza',desc:'S 350 / M 650 / L 1000 / XL 1500'},
+      {id:'chicken-tikka-pizza',name:'Chicken Tikka Pizza',price:350,time:12,cat:'Pizza',icon:'pizza',desc:'S 350 / M 650 / L 1000 / XL 1500',badge:'popular'},
+      {id:'chicken-fajita-pizza',name:'Chicken Fajita Pizza',price:350,time:12,cat:'Pizza',icon:'pizza',desc:'S 350 / M 650 / L 1000 / XL 1500'},
+      {id:'cheese-lover-pizza',name:'Cheese Lover Pizza',price:350,time:12,cat:'Pizza',icon:'pizza',desc:'S 350 / M 650 / L 1000 / XL 1500'},
+      {id:'vegetable-pizza',name:'Vegetable Pizza',price:350,time:12,cat:'Pizza',icon:'pizza',desc:'S 350 / M 650 / L 1000 / XL 1500'},
+      {id:'bbq-pizza',name:'BBQ Pizza',price:350,time:12,cat:'Pizza',icon:'pizza',desc:'S 350 / M 650 / L 1000 / XL 1500'},
+      {id:'supreme-pizza',name:'Supreme Pizza',price:400,time:13,cat:'Pizza',icon:'pizza',desc:'S 400 / M 700 / L 1100 / XL 1600'},
+      {id:'kabab-crust-pizza',name:'Kabab Crust Pizza',price:500,time:14,cat:'Pizza',icon:'pizza',desc:'S 500 / M 800 / L 1300 / XL 1800'},
+      {id:'malai-boti-pizza',name:'Malai Boti Pizza',price:450,time:13,cat:'Pizza',icon:'pizza',desc:'S 450 / M 750 / L 1150 / XL 1750'},
+      {id:'crown-crust-pizza',name:'Crown Crust Pizza',price:500,time:15,cat:'Pizza',icon:'pizza',desc:'S 500 / M 900 / L 1500 / XL 2200'},
+      {id:'lazania',name:'Lazania',price:500,time:14,cat:'Pizza',icon:'pizza',desc:'S 500 / M 800 / L 1250 / XL 1750'},
+      {id:'pepperoni-pizza',name:'Pepperoni Pizza',price:400,time:13,cat:'Pizza',icon:'pizza',desc:'S 400 / M 700 / L 1150 / XL 1650'},
+      {id:'hassan-special-pizza',name:'Hassan Special Pizza',price:500,time:15,cat:'Pizza',icon:'pizza',desc:'S 500 / M 800 / L 1250 / XL 1750',badge:'popular'},
+      {id:'extra-topping',name:'Extra Topping',price:50,time:2,cat:'Pizza',icon:'pizza',desc:'Add to any pizza'},
+      {id:'plain-fries-s',name:'Plain Fries (Small)',price:180,time:4,cat:'Snacks',icon:'fries',desc:'Crispy fries'},
+      {id:'plain-fries-m',name:'Plain Fries (Medium)',price:250,time:5,cat:'Snacks',icon:'fries',desc:'Crispy fries'},
+      {id:'plain-fries-l',name:'Plain Fries (Large)',price:350,time:6,cat:'Snacks',icon:'fries',desc:'Crispy fries'},
+      {id:'loaded-fries',name:'Loaded Fries',price:400,time:6,cat:'Snacks',icon:'fries',desc:'Topped loaded fries',badge:'popular'},
+      {id:'loaded-fries-l',name:'Loaded Fries (Large)',price:550,time:7,cat:'Snacks',icon:'fries',desc:'Large loaded fries'},
+      {id:'zinger-piece',name:'Zinger Piece',price:50,time:3,cat:'Snacks',icon:'nuggets',desc:'Crispy zinger piece'},
+      {id:'club-sandwich',name:'Club Sandwich',price:260,time:7,cat:'Sandwiches',icon:'sandwich',desc:'Triple layer club'},
+      {id:'club-cheese-sandwich',name:'Club Cheese Sandwich',price:300,time:7,cat:'Sandwiches',icon:'sandwich',desc:'With cheese'},
+      {id:'tikka-sandwich',name:'Tikka Sandwich',price:280,time:7,cat:'Sandwiches',icon:'sandwich',desc:'Tikka filling'},
+      {id:'tikka-cheese-sandwich',name:'Tikka Cheese Sandwich',price:320,time:7,cat:'Sandwiches',icon:'sandwich',desc:'With cheese'},
+      {id:'zinger-sandwich',name:'Zinger Sandwich',price:320,time:7,cat:'Sandwiches',icon:'sandwich',desc:'Crispy zinger'},
+      {id:'zinger-cheese-sandwich',name:'Zinger Cheese Sandwich',price:360,time:8,cat:'Sandwiches',icon:'sandwich',desc:'With cheese'},
+      {id:'patty-sandwich',name:'Patty Sandwich',price:250,time:6,cat:'Sandwiches',icon:'sandwich',desc:'Beef patty'},
+      {id:'patty-cheese-sandwich',name:'Patty Cheese Sandwich',price:290,time:7,cat:'Sandwiches',icon:'sandwich',desc:'With cheese'},
+      {id:'drink-345',name:'Regular Drink (345ml)',price:80,time:1,cat:'Drinks',icon:'drink',desc:'345ml bottle'},
+      {id:'drink-500',name:'Drink (500ml)',price:100,time:1,cat:'Drinks',icon:'drink',desc:'500ml bottle'},
+      {id:'drink-1ltr',name:'Drink (1Ltr)',price:150,time:1,cat:'Drinks',icon:'drink',desc:'1 litre'},
+      {id:'drink-15ltr',name:'Drink (1.5Ltr)',price:200,time:1,cat:'Drinks',icon:'drink',desc:'1.5 litre'},
+      {id:'drink-225ltr',name:'Drink (2.25Ltr)',price:250,time:1,cat:'Drinks',icon:'drink',desc:'2.25 litre'},
+      {id:'water',name:'Water',price:80,time:1,cat:'Drinks',icon:'water',desc:'Bottled water'},
+      {id:'deal-zinger-fries',name:'Zinger Deal',price:400,time:8,cat:'Deals',icon:'deal',desc:'1 Zinger Burger + Fries + Reg Drink',badge:'deal'},
+      {id:'deal-double-zinger',name:'Double Zinger Deal',price:650,time:10,cat:'Deals',icon:'deal',desc:'2 Zinger Burger + Fries + Drink 500ml',badge:'deal'},
+      {id:'deal-double-shawarma',name:'Double Shawarma Deal',price:600,time:10,cat:'Deals',icon:'deal',desc:'2 Zinger Shawarma + Fries + Drink 500ml'},
+      {id:'deal-zinger-pizza',name:'Zinger Pizza Deal',price:600,time:12,cat:'Deals',icon:'deal',desc:'1 Zinger Burger + Small Pizza + Drink 500ml'},
+      {id:'deal-shawarma-patty',name:'Shawarma Patty Deal',price:700,time:10,cat:'Deals',icon:'deal',desc:'1 Shawarma + Patty Burger + Drink 500ml'},
+      {id:'deal-zinger-drink',name:'Zinger Drink Deal',price:550,time:8,cat:'Deals',icon:'deal',desc:'1 Zinger Burger + Drink 500ml'},
+      {id:'deal-2small-pizza',name:'2 Small Pizza Deal',price:750,time:14,cat:'Deals',icon:'deal',desc:'2 Small Pizza + Drink 500ml'},
+      {id:'deal-2med-pizza',name:'2 Medium Pizza Deal',price:1400,time:20,cat:'Deals',icon:'deal',desc:'2 Medium Pizza + Drink 1Ltr',badge:'deal'},
+      {id:'deal-2large-pizza',name:'2 Large Pizza Deal',price:2100,time:25,cat:'Deals',icon:'deal',desc:'2 Large Pizza + Drink 1.5Ltr'},
+      {id:'deal-family',name:'Family Deal',price:2150,time:25,cat:'Deals',icon:'deal',desc:'Zinger + Shawarma + Small Pizza + Drink 1.5Ltr'}
     ];
     let MENU=DEFAULT_MENU;const CATS=['Burgers','Shawarma & Rolls','Pizza','Snacks','Sandwiches','Drinks','Deals'];
     const MI={};function rebuildMI(){Object.keys(MI).forEach(k=>delete MI[k]);MENU.forEach(m=>MI[m.id]=m)}
@@ -781,18 +820,38 @@
 
     function parseMenuText(text){
       const lines=text.split('\n').map(l=>l.trim()).filter(Boolean);const items=[],seen=new Set();
-      const catRe=[{cat:'Burgers',kw:/burger|zinger|whopper|mighty/i},{cat:'Shawarma & Rolls',kw:/shawarma|roll/i},{cat:'Pizza',kw:/pizza/i},{cat:'Snacks',kw:/fries|nuggets|wings|samosa|snack|strips/i},{cat:'Sandwiches',kw:/sandwich|sub/i},{cat:'Drinks',kw:/pepsi|coke|cola|sprite|fanta|7up|7 up|dew|drink|juice|shake|water|margarita/i},{cat:'Deals',kw:/deal|combo|meal|feast|box/i}];
-      for(const line of lines){
-        if(line.length>80||/^\s*menu|^\s*prices?|^\s*rs\.?\s*$|^\d+\.?\s*$/i.test(line))continue;
-        const priceM=line.match(/(?:rs\.?|pkr|pkrs?\.?)?\s*([\d,]+)\s*(?:rs\.?|pkr)?\.?\s*$/i)||line.match(/\b(?:rs\.?|pkr|pkrs?\.?)\s*([\d,]+)\b/i);
-        if(!priceM)continue;
-        const price=parseInt(priceM[1].replace(/,/g,''),10);if(!price||price<50)continue;
-        let name=line.replace(priceM[0],'').replace(/^[\s\-–—:.#0-9)]+/, '').trim();
-        name=name.replace(/\s+/g,' ').trim();
+      const catRe=[
+        {cat:'Deals',kw:/deal|combo|meal|feast|box/i},
+        {cat:'Sandwiches',kw:/sandwich|sub/i},
+        {cat:'Shawarma & Rolls',kw:/shawarma|roll|platter|paratha/i},
+        {cat:'Pizza',kw:/pizza|lazania|fajita|crust|pepperoni|tikka|cheese\s*lover|supreme|bbq|margherita/i},
+        {cat:'Drinks',kw:/drink|pepsi|coke|cola|sprite|fanta|7up|7 up|dew|water|juice|shake|margarita|mltr|ml\b|ltr/i},
+        {cat:'Snacks',kw:/fries|nuggets|wings|samosa|snack|strips|topping|piece/i},
+        {cat:'Burgers',kw:/burger|zinger|whopper|mighty|shami|anda|botti|chapli|takkar|tower|raza|patty/i}
+      ];
+      const iconMap={'Burgers':'burger','Shawarma & Rolls':'roll','Pizza':'pizza','Snacks':'fries','Sandwiches':'sandwich','Drinks':'drink','Deals':'deal'};
+      for(const raw of lines){
+        if(raw.length>90||/^\s*menu|^\s*prices?|^\s*rs\.?\s*$/i.test(raw))continue;
+        const line=raw.replace(/\s+/g,' ');
+        const sizes=line.match(/(?:^|\s)(\d[\d,]*)\s+(\d[\d,]*)\s+(\d[\d,]*)\s+(\d[\d,]*)\s*$/);
+        let price=null,desc='',nameRaw=line;
+        if(sizes){
+          const nums=sizes.slice(1).map(n=>parseInt(n.replace(/,/g,''),10));
+          if(Math.min(...nums)>=40){price=nums[0];desc='S '+nums[0]+' / M '+nums[1]+' / L '+nums[2]+' / XL '+nums[3];nameRaw=line.replace(sizes[0],' ')}
+        }
+        if(price===null){
+          const range=line.match(/(?:rs\.?|pkr|pkrs?\.?)?\s*(\d[\d,]*)\s*\/\s*(\d[\d,]*)\s*(?:\(with\s+cheese\)|with\s+cheese)?/i);
+          if(range){price=parseInt(range[1].replace(/,/g,''),10);desc='With Cheese '+range[2];nameRaw=line.replace(range[0],' ')}
+        }
+        if(price===null){
+          const priceM=line.match(/(?:rs\.?|pkr|pkrs?\.?)?\s*(\d[\d,]+)\s*(?:rs\.?|pkr)?\.?\s*(?:\(with\s+cheese\)|with\s+cheese)?\s*$/i)||line.match(/\b(?:rs\.?|pkr|pkrs?\.?)\s*(\d[\d,]+)\b/i);
+          if(priceM){price=parseInt(priceM[1].replace(/,/g,''),10);nameRaw=line.replace(priceM[0],' ')}
+        }
+        if(price===null||price<40)continue;
+        let name=nameRaw.replace(/^[\s\-–—:.#0-9)]+/, '').replace(/\(with\s+cheese\)/i,' ').replace(/\s+/g,' ').trim();
         if(name.length<2)continue;if(seen.has(name.toLowerCase()))continue;
         let cat='Snacks';for(const c of catRe){if(c.kw.test(name)){cat=c.cat;break}}
-        const iconMap={'Burgers':'burger','Shawarma & Rolls':'roll','Pizza':'pizza','Snacks':'fries','Sandwiches':'sandwich','Drinks':'drink','Deals':'deal'};
-        seen.add(name.toLowerCase());items.push({id:'m'+items.length,name,price,time:Math.min(25,4+Math.round(price/150)),cat,icon:iconMap[cat],desc:''});
+        seen.add(name.toLowerCase());items.push({id:'m'+items.length,name,price,time:Math.min(25,4+Math.round(price/150)),cat,icon:iconMap[cat],desc});
       }
       return items;
     }
@@ -811,10 +870,13 @@
     function escAttr(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
     function saveMenuFromReview(){
-      const box=$('#menuReview'),rows=box.querySelectorAll('.menu-row');let items=[];
-      if(rows.length){
+      let items=[];
+      if(_ocrItems.length){
+        items=_ocrItems.filter(it=>it.name&&it.price>0).map((it,i)=>({id:'c'+i,name:it.name,price:it.price,time:Math.min(25,4+Math.round(it.price/150)),cat:it.cat,icon:it.icon||'burger',desc:it.desc||''}));
+      }else{
+        const box=$('#menuReview'),rows=box.querySelectorAll('.menu-row');
         rows.forEach(row=>{const name=row.querySelector('.r-name').value.trim(),price=parseInt(row.querySelector('.r-price').value)||0;if(name&&price>0)items.push({id:'c'+items.length,name,price,time:Math.min(25,4+Math.round(price/150)),cat:row.querySelector('.r-cat').value,icon:({'Burgers':'burger','Shawarma & Rolls':'roll','Pizza':'pizza','Snacks':'fries','Sandwiches':'sandwich','Drinks':'drink','Deals':'deal'})[row.querySelector('.r-cat').value]||'burger',desc:''})});
-      }else{items=_ocrItems.filter(it=>it.name&&it.price>0)}
+      }
       if(!items.length){toast('Add at least one item',true);return}
       saveCustomMenu(items);closeMenuModal();setOcrStatus(false,'');
     }
